@@ -1,0 +1,18 @@
+ENVI
+description =  {Land cover }
+samples = 2294
+lines   = 1607
+bands   = 1
+header offset = 0
+file type = ENVI Standard
+data type = 1
+interleave =   bsq
+sensor type = Unknown
+byte order = 0
+map info =  {Albers Conical Equal Area, 1, 1, 1511725, -2134725, 25, 25,Geocentric Datum of Australia 1994}
+projection info =   {9, 6378137, 6356752.314140356, 0, 132, 0, 0, -18, -36,Geocentric Datum of Australia 1994, Albers Conical Equal Area}
+coordinate system string =   {PROJCS["GDA94_Australian_Albers",GEOGCS["GCS_GDA_1994",DATUM["D_GDA_1994",SPHEROID["GRS_1980",6378137,298.257222101]],PRIMEM["Greenwich",0],UNIT["Degree",0.017453292519943295]],PROJECTION["Albers"],PARAMETER["standard_parallel_1",-18],PARAMETER["standard_parallel_2",-36],PARAMETER["latitude_of_origin",0],PARAMETER["central_meridian",132],PARAMETER["false_easting",0],PARAMETER["false_northing",0],UNIT["Meter",1]]}
+wavelength units =  
+band names = { 
+    Land cover class
+}
