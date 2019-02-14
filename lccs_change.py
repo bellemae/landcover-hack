@@ -22,8 +22,15 @@ def write_diff(foo:xr.DataArray, fn, nodata=-1, dtype=None, debug=False):
                 dst.write(foo.astype(dtype).values, 1)
                 
                 # Copy metadata
-                for attr in foo.attrs:
-                    dst.update_tags(attr=foo.attrs[attr])
+                #for attr in foo.attrs:
+                #    dst.update_tags(attr=foo.attrs[attr])
+                dst.update_tags(**foo.attrs)
+                
+#                 # TODO: Can we add colormap so we don't have to do it in e.g. QGIS? (may not work w/ more than 256 levels)
+#                 dst.write_colormap(1, {
+#                     0: (255, 0, 0, 255),
+#                     255: (0, 0, 255, 255),
+#                 })
                                     
                 dst.close()
                 
