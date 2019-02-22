@@ -2,6 +2,7 @@ import xarray as xr
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.cm as cm
+import matplotlib.colors as colors
 import rasterio
 import pandas as pd # I hate myself for this
 
@@ -274,42 +275,26 @@ def LCCS_Plot(da):
     if (nodata in unique_vals): unique_vals.remove(nodata)
     vmin = np.min(unique_vals)
     vmax = np.max(unique_vals)
-    
+
     fig, ax = plt.subplots()
     fig.set_figwidth(16)
     fig.set_figheight(12)
-    #cmap = cm.get_cmap('gist_ncar',len(unique_vals)) # Get discrete color map
-    cmap = cm.get_cmap('gist_ncar',vmax-vmin+1) # Get discrete color map
-    cax = ax.imshow(
-        da.where(da!=da.nodata).values, 
-        cmap=cmap, 
-        interpolation='nearest',
-        extent=[
-            da.coords[da.dims[1]].values[0],
-            da.coords[da.dims[1]].values[-1],
-            da.coords[da.dims[0]].values[-1],
-            da.coords[da.dims[0]].values[0]
-        ],
-        aspect='equal',
-    )
+    
+    colours = "#787878 #96d564 #7af4d8 #75f4d0 #f5c7fd #faec87 #00b3de #0078c8 #d4f52c #505050 #a8fc15 #40e487 #f5c8f7 #f5d183 #60dffb #9bfbc5 #647864 #96FA64 #646464 #A7E6BE #FAC3F0 #FAEEBE #149EF4 #0FA0FA #ebf91f #1ac832 #7dedc6 #5a5a5a #e9b1e6 #feda48 #0abeee #0a9bee #cdf711 #86dad5 #d2faa4 #b4fac8 #4b4b4b #fae696 #c0effa #5087ff #f4fa13 #55e250 #03fcf8 #53fae1 #fa93f0 #6e6e6e #27c8f7 #2774f7 #f5f83e #85d964 #dbf652 #2ef7c8 #8c8c8c #f5b8c5 #3c3c3c #0c41f0 #dffa72 #64d26f #8ef8fb #64fbd8 #ccaccc #b6ae83 #fae696 #282828"
+    bounds = [int(x) for x in "111111 111112 111123 111124 111215 111216 111227 111228 112111 112112 112123 112124 112215 112216 112227 112228 123111 123112 123123 123124 123215 123216 123227 123228 124111 124112 124123 124124 124215 124216 124227 124228 215111 215112 215123 215124 215215 215216 215227 215228 216111 216112 216123 216124 216215 216216 216227 216228 227111 227112 227123 227124 227215 227216 227227 227228 228111 228112 228123 228124 228215 228216 228227 228228".split(' ')]
+    d = dict(zip(bounds, colours.split()))
+    cols = [d[x] for x in unique_vals]
+    
+    cmap = colors.ListedColormap(cols)
+    norm = colors.BoundaryNorm(unique_vals + [555555], cmap.N)
+    im = ax.imshow(da,cmap=cmap, norm=norm)
+    
     ax.set_title(da.name)
-
-    # This does ALL labels (replaced by unique_vals below)
-    #cbar_ticks = [-1]+[LCCS_Transition_Labels[v]['val'] for v in LCCS_Transition_Labels if LCCS_Transition_Labels[v]['val'] in da.values]
-    #cbar_labels = ["NoData"]+[LCCS_Transition_Labels[v]['label'] for v in LCCS_Transition_Labels if LCCS_Transition_Labels[v]['val'] in da.values]
-
-    #cbar_ticks = [nodata]+unique_vals
-    #cbar_labels = ["NoData"]+[LCCS_Transition_Labels[LCCS_ValueToTuple[v]]['label'] for v in unique_vals]
-
+    
     cbar_ticks = unique_vals
     cbar_labels = [(LCCS_Transitions[v] if v in LCCS_Transitions else '') for v in unique_vals]
-    
-    # nudge cbar to put ticks in middle of color bands
-    vmin = np.min(np.array(cbar_ticks))
-    vmax = np.max(np.array(cbar_ticks))
-    cax.set_clim(vmin-0.5,vmax+0.5)
-    
-    cbar = fig.colorbar(cax, ticks=cbar_ticks, orientation='vertical')
-    cbar.ax.set_yticklabels(cbar_labels)
 
+    cbar = fig.colorbar(im, ticks=cbar_ticks)
+    cbar.ax.set_yticklabels(cbar_labels)
+    
     return fig,ax
