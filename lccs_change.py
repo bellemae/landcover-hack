@@ -268,7 +268,6 @@ def LCCS_ChangeDetect(t1, t2, showonly=None, nodata=-1, name='LCCS_ChangeDetect_
 
 
 def LCCS_Plot(da):
-    # TODO: FIXME - when i changed to discontinuous values, it created gaps in cbar.  Need to truly index color!
     nodata=da.nodata
     # Get all the values that were actually used so that labels aren't so crowded
     unique_vals = list(da.counts.keys()) if 'counts' in da.attrs else np.unique(da.values)
